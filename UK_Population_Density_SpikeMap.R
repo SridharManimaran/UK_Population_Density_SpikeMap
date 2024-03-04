@@ -1,11 +1,10 @@
-# libraries we need
+# libraries
 libs <- c(
   "tidyverse", "R.utils",
   "httr", "sf", "stars",
   "rayshader"
 )
 
-# install missing libraries
 installed_libs <- libs %in% rownames(installed.packages())
 if (any(installed_libs == F)) {
   install.packages(libs[!installed_libs])
@@ -15,8 +14,7 @@ if (any(installed_libs == F)) {
 invisible(lapply(libs, library, character.only = T))
 
 
-### 1. DOWNLOAD & UNZIP DATA
-### ------------------------
+### DOWNLOAD & UNZIP DATA
 url <-
     "https://geodata-eu-central-1-kontur-public.s3.amazonaws.com/kontur_datasets/kontur_population_GB_20231101.gpkg.gz"
 file_name <- "british-population.gpkg.gz"
@@ -33,14 +31,10 @@ get_population_data <- function() {
 
 get_population_data()
 
-### 2. LOAD DATA
-### -------------
+### LOAD DATA
 load_file_name <- gsub(".gz", "", file_name)
 
 # Lambert projection 
-# might not be the best solution for non-European countries
-# if it creates a skewed map, please use:
-
 crsLONGLAT <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 get_population_data <- function() {
   pop_df <- sf::st_read(
@@ -58,9 +52,7 @@ ggplot() +
     color = "grey10", fill = "grey10"
   )
 
-### 3. SHP TO RASTER
-### ----------------
-
+### SHP TO RASTER
 bb <- sf::st_bbox(pop_sf)
 
 get_raster_size <- function() {
